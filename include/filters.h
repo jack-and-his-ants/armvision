@@ -5,7 +5,7 @@
 void grayscale(Image * image);
 void monochrome(Image * image, char channel);
 void negative(Image * image);
-void blur(Image * image);
+void blurr(Image * image, int mask_size);
 void sobel(Image * image);
 
 #endif //ARMVISION_FILTERS_H

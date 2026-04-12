@@ -1,8 +1,16 @@
 #include "filters.h"
 
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <string.h>
 #include "image.h"
+
+int clamp(const int v,const int min,const int max) {
+    if (v < min) return min;
+    if (v > max) return max;
+    return v;
+}
+
 
 void grayscale(Image * bmp) {
     for ( int y = 0; y < bmp->height; ++y ) {
@@ -60,4 +68,45 @@ void negative(Image * bmp) {
             bmp->data[i + 2] = -1 - bmp->data[i + 2];
         }
     }
+}
+
+void blurr(Image * bmp, int mask_size) {
+    if (mask_size%2==0) {
+        perror("Incorrect mask size: must be odd");
+        return;
+    }
+    Image copy;
+    copy.width = bmp->width;
+    copy.height = bmp->height;
+    copy.row_size = bmp->row_size;
+    copy.data = (unsigned char*)malloc(copy.row_size * copy.height * sizeof(char));
+    memcpy(copy.data, bmp->data, copy.row_size * copy.height * sizeof(char));
+
+    for ( int y = 0; y < bmp->height; ++y ) {
+        for ( int x = 0; x < bmp->width; ++x ){
+
+            int result_b=0,result_g=0,result_r=0;
+
+            for (int i = -mask_size/2 ; i <= mask_size/2 ; ++i ) {
+                for (int j = -mask_size/2 ; j <= mask_size/2 ; ++j ) {
+
+                    int ny = clamp(y + i, 0, bmp->height - 1);
+                    int nx = clamp(x + j, 0, bmp->width - 1);
+
+                    int idx = ny * bmp->row_size + nx * 3;
+
+                    result_b += copy.data[idx];
+                    result_g += copy.data[idx + 1];
+                    result_r += copy.data[idx + 2];
+                }
+            }
+            int z = 3 * x + y * bmp->row_size;
+            int area = mask_size*mask_size;
+            bmp->data[z] = result_b/area;
+            bmp->data[z + 1] = result_g/area;
+            bmp->data[z + 2] = result_r/area;
+        }
+    }
+
+    free(copy.data);
 }
