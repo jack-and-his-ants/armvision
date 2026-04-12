@@ -51,7 +51,7 @@ Image* load_bmp(const char *filename) {
     }
 
     if (info.bitsPerPixel != 24) {
-        printf("Only 24-bit BMP supported (yet)\n");
+        printf("Only 24-bit BMP supported\n");
         fclose(f);
         return NULL;
     }
