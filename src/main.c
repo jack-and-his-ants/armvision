@@ -5,7 +5,7 @@
 
 int main(int argc , char ** argv) {
     Image * bmp = load_bmp("snail.bmp");
-    grayscale(bmp);
+    negative(bmp);
     save_bmp(bmp, "test.bmp");
     free_bmp(bmp);
     return 0;
