@@ -180,3 +180,60 @@ void gaussian_blur(Image *bmp, int size) {
     free(kernel);
     free(temp.data);
 }
+
+
+void sobel(Image *bmp) {
+
+    grayscale(bmp);
+
+    Image copy = *bmp;
+    copy.data = malloc(copy.row_size * copy.height);
+    memcpy(copy.data, bmp->data, copy.row_size * copy.height);
+
+    int gx[3][3] = {
+        {-1, 0, 1},
+        {-2, 0, 2},
+        {-1, 0, 1}
+    };
+
+    int gy[3][3] = {
+        {-1, -2, -1},
+        { 0,  0,  0},
+        { 1,  2,  1}
+    };
+
+    for (int y = 0; y < bmp->height; y++) {
+        for (int x = 0; x < bmp->width; x++) {
+
+            int sum_x = 0;
+            int sum_y = 0;
+
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+
+                    int ny = clamp(y + i, 0, bmp->height - 1);
+                    int nx = clamp(x + j, 0, bmp->width - 1);
+
+                    int idx = ny * bmp->row_size + nx * 3;
+
+                    uint8_t val = copy.data[idx]; // grayscale
+
+                    sum_x += val * gx[i + 1][j + 1];
+                    sum_y += val * gy[i + 1][j + 1];
+                }
+            }
+            // magnitude
+            int mag = (int)sqrt(sum_x * sum_x + sum_y * sum_y);
+
+            mag = mag > 255 ? 255 : mag;
+
+            int z = y * bmp->row_size + x * 3;
+
+            bmp->data[z]     = mag;
+            bmp->data[z + 1] = mag;
+            bmp->data[z + 2] = mag;
+        }
+    }
+
+    free(copy.data);
+}

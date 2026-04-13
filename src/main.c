@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 int main(int argc , char ** argv) {
-    Image * bmp = load_bmp("snail.bmp");
-    gaussian_blur(bmp,21);
+    Image * bmp = load_bmp("../images/blackbuck.bmp");
+    sobel(bmp);
     save_bmp(bmp, "test1.bmp");
     free_bmp(bmp);
     return 0;

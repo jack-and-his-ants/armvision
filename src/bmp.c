@@ -44,20 +44,24 @@ Image* load_bmp(const char *filename) {
     fread(&header, sizeof(header), 1, f);
     fread(&info, sizeof(info), 1, f);
 
+    // is BMP
     if (header.type != 0x4D42) {
         printf("Not a BMP file\n");
         fclose(f);
         return NULL;
     }
 
-    if (info.bitsPerPixel != 24) {
-        printf("Only 24-bit BMP supported\n");
+    if (info.compression != 0) {
+        printf("Compressed BMP not supported\n");
         fclose(f);
         return NULL;
     }
 
-    if (info.compression != 0) {
-        printf("Compressed BMP not supported\n");
+    int is_8bit = (info.bitsPerPixel == 8);
+    int is_24bit = (info.bitsPerPixel == 24);
+
+    if (!is_8bit && !is_24bit) {
+        printf("Only 8-bit and 24-bit BMP supported\n");
         fclose(f);
         return NULL;
     }
@@ -79,9 +83,42 @@ Image* load_bmp(const char *filename) {
         fclose(f);
         return NULL;
     }
+
+    // reading palette of colors
+    uint8_t palette[256][4];
+
+    if (is_8bit) {
+        int palette_size = info.colorsUsed ? info.colorsUsed : 256;
+        fread(palette, 4, palette_size, f);
+    }
+
     fseek(f, header.offset, SEEK_SET);
 
-    fread(img->data, 1, img->row_size * img->height, f);
+    // 24-bit handling
+    if (is_24bit) {
+        fread(img->data, 1, img->row_size * img->height, f);
+    }
+    // 8 - bit handling
+    if (is_8bit) {
+        int row_size_8 = (img->width + 3) & (~3);
+        uint8_t *row = malloc(row_size_8);
+
+        for (int y = 0; y < img->height; y++) {
+            fread(row, 1, row_size_8, f);
+
+            for (int x = 0; x < img->width; x++) {
+                uint8_t idx = row[x];
+
+                int z = y * img->row_size + x * 3;
+
+                img->data[z]     = palette[idx][0]; // B
+                img->data[z + 1] = palette[idx][1]; // G
+                img->data[z + 2] = palette[idx][2]; // R
+            }
+        }
+
+        free(row);
+    }
 
     fclose(f);
     return img;
