@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2)
-project(armvision C)
+project(armvision C ASM)
 
 set(CMAKE_C_STANDARD 11)
 
@@ -11,4 +11,7 @@ add_executable(armvision
         src/main.c
         src/bmp.c
         src/filters.c
-        include/image.h)
+        include/image.h
+        src/assembly/clamp.s
+        include/utils.h
+        src/utils.c)

@@ -5,8 +5,8 @@
 
 int main(int argc , char ** argv) {
     Image * bmp = load_bmp("snail.bmp");
-    blurr(bmp,3);
-    save_bmp(bmp, "test.bmp");
+    gaussian_blur(bmp,21);
+    save_bmp(bmp, "test1.bmp");
     free_bmp(bmp);
     return 0;
 }
