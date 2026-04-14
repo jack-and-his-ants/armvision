@@ -1,6 +1,5 @@
 #ifndef ARMVISION_FILTERS_H
 #define ARMVISION_FILTERS_H
-
 #include "image.h"
 
 void grayscale(Image *image);

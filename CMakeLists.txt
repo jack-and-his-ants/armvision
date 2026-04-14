@@ -13,5 +13,10 @@ add_executable(armvision
         src/filters.c
         include/image.h
         src/assembly/clamp.s
+        src/assembly/grayscale.s
         include/utils.h
-        src/utils.c)
+        src/utils.c
+        include/benchmark.h
+        src/benchmark.c
+        include/filters_asm.h
+        src/filters_asm.c)

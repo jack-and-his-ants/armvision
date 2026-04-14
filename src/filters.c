@@ -21,9 +21,6 @@ static void generate_kernel(float *kernel, int size, float sigma) {
     }
 }
 
-
-
-
 void grayscale(Image * bmp) {
     for ( int y = 0; y < bmp->height; ++y ) {
         for ( int x = 0; x < bmp->width; ++x ) {
