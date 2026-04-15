@@ -5,6 +5,7 @@
 
 void benchmark_grayscale(Image *img);
 void benchmark_monochrome(Image *img);
+void benchmark_negative(Image *img);
 
 
 #endif //ARMVISION_BENCHMARK_H

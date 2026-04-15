@@ -52,6 +52,44 @@ void benchmark_grayscale(Image *img) {
 }
 
 
+void benchmark_negative(Image *img) {
+
+    double start, end;
+
+    Image copy = *img;
+    copy.data = malloc(img->row_size * img->height);
+    printf("Negative benchmark\n");
+    // C VERSION
+
+    memcpy(copy.data, img->data, img->row_size * img->height);
+
+    start = get_time();
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        negative(&copy);
+    }
+
+    end = get_time();
+
+    printf("C negative:   %f s\n", end - start);
+
+    // ASM VERSION
+    memcpy(copy.data, img->data, img->row_size * img->height);
+
+    start = get_time();
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        negative_asm(&copy);
+    }
+
+    end = get_time();
+
+    printf("ASM negative: %f s\n", end - start);
+
+    free(copy.data);
+}
+
+
 void benchmark_monochrome(Image *img) {
 
     double start, end;

@@ -15,6 +15,7 @@ add_executable(armvision
         src/assembly/clamp.s
         src/assembly/grayscale.s
         src/assembly/monochrome_asm.s
+        src/assembly/negative_asm.s
         include/utils.h
         src/utils.c
         include/benchmark.h
