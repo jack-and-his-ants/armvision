@@ -7,6 +7,7 @@
 #include "image.h"
 #include "filters.h"
 #include "filters_asm.h"
+#include "filters_neon.h"
 
 double get_time() {
     struct timespec ts;

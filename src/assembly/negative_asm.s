@@ -18,6 +18,10 @@ _negative_asm:
     ldr w3, [x0, #12]   ; int height
     ldr w4, [x0, #16]   ; int row_size
 
+    mov w12, w4
+    add w13, w2, w2, lsl #1
+    sub w12,w12,w13     ; padding
+
     mov w5, wzr ; int y = 0
     mov x7, x1  ;  current address
     y_ptl:
@@ -49,7 +53,7 @@ _negative_asm:
             add x7,x7, #3              ; increase current address by 3
             b x_ptl                 ; branch to x ptl
         end_x_loop:
-
+        add x7, x7, w12, uxtw
         add w5,w5, #1                  ; increment y
         b y_ptl                     ; branch to y ptl
     end_y_loop:

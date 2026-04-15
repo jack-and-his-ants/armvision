@@ -13,6 +13,13 @@
 ; void monochrome_asm(Image * bmp,char channel);
 
 _monochrome_asm:
+    ldr w2, [x0, #8]    ; int width
+    ldr w3, [x0, #12]   ; int height
+    ldr w4, [x0, #16]   ; int row_size
+    mov w12, w4
+    add w13, w2, w2, lsl #1
+    sub w12,w12,w13 ; padding
+    mov w5, wzr ; int y = 0
     cmp w1,'b'
     beq monochrome_b
     cmp w1,'g'
@@ -25,13 +32,7 @@ _monochrome_asm:
     ret
 
 monochrome_b:
-    start_b:
     ldr x7, [x0]        ; char * data
-    ldr w2, [x0, #8]    ; int width
-    ldr w3, [x0, #12]   ; int height
-    ldr w4, [x0, #16]   ; int row_size
-
-    mov w5, wzr ; int y = 0
     y_ptl_b:
         cmp w5, w3
         b.ge end_y_loop_b             ;  if y >= height: end y loop
@@ -52,7 +53,7 @@ monochrome_b:
             add x7,x7, #3              ; increase current address by 3
             b x_ptl_b                 ; branch to x ptl
         end_x_loop_b:
-
+        add x7,x7,w12,uxtw ; add padding size
         add w5,w5, #1                  ; increment y
         b y_ptl_b                     ; branch to y ptl
     end_y_loop_b:
@@ -63,13 +64,7 @@ monochrome_b:
 
 
 monochrome_g:
-    start_g:
     ldr x7, [x0]        ; char * data
-    ldr w2, [x0, #8]    ; int width
-    ldr w3, [x0, #12]   ; int height
-    ldr w4, [x0, #16]   ; int row_size
-
-    mov w5, wzr ; int y = 0
     y_ptl_g:
         cmp w5, w3
         b.ge end_y_loop_g            ;  if y >= height: end y loop
@@ -92,6 +87,7 @@ monochrome_g:
             b x_ptl_g                 ; branch to x ptl
         end_x_loop_g:
 
+        add x7,x7,w12,uxtw ; add padding size
         add w5,w5, #1                  ; increment y
         b y_ptl_g                     ; branch to y ptl
     end_y_loop_g:
@@ -101,13 +97,7 @@ monochrome_g:
     ret
 
 monochrome_r:
-    start_r:
     ldr x7, [x0]        ; char * data
-    ldr w2, [x0, #8]    ; int width
-    ldr w3, [x0, #12]   ; int height
-    ldr w4, [x0, #16]   ; int row_size
-
-    mov w5, wzr ; int y = 0
     y_ptl_r:
         cmp w5, w3
         b.ge end_y_loop_r            ;  if y >= height: end y loop
@@ -130,7 +120,7 @@ monochrome_r:
             add x7,x7, #3              ; increase current address by 3
             b x_ptl_r                 ; branch to x ptl
         end_x_loop_r:
-
+        add x7,x7,w12,uxtw ; add padding size
         add w5,w5, #1                  ; increment y
         b y_ptl_r                     ; branch to y ptl
     end_y_loop_r:

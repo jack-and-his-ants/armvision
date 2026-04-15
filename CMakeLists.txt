@@ -16,9 +16,11 @@ add_executable(armvision
         src/assembly/grayscale.s
         src/assembly/monochrome_asm.s
         src/assembly/negative_asm.s
+        src/neon/negative_neon.s
         include/utils.h
         src/utils.c
         include/benchmark.h
         src/benchmark.c
         include/filters_asm.h
-        src/filters_asm.c)
+        src/filters_asm.c
+        include/filters_neon.h)
