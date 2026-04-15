@@ -1,3 +1,5 @@
+#include "benchmark.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,20 +15,19 @@ double get_time() {
 }
 
 void benchmark_grayscale(Image *img) {
-    const int ITER = 1000;
 
     double start, end;
 
     Image copy = *img;
     copy.data = malloc(img->row_size * img->height);
-
+    printf("Grayscale benchmark\n");
     // C VERSION
 
     memcpy(copy.data, img->data, img->row_size * img->height);
 
     start = get_time();
 
-    for (int i = 0; i < ITER; i++) {
+    for (int i = 0; i < NUM_TESTS; i++) {
         grayscale(&copy);
     }
 
@@ -39,13 +40,51 @@ void benchmark_grayscale(Image *img) {
 
     start = get_time();
 
-    for (int i = 0; i < ITER; i++) {
+    for (int i = 0; i < NUM_TESTS; i++) {
         grayscale_asm(&copy);
     }
 
     end = get_time();
 
     printf("ASM grayscale: %f s\n", end - start);
+
+    free(copy.data);
+}
+
+
+void benchmark_monochrome(Image *img) {
+
+    double start, end;
+
+    Image copy = *img;
+    copy.data = malloc(img->row_size * img->height);
+    printf("Monochrome benchmark\n");
+    // C VERSION
+
+    memcpy(copy.data, img->data, img->row_size * img->height);
+
+    start = get_time();
+    char c[] = {'r', 'g', 'b'};
+    for (int i = 0; i < NUM_TESTS; i++) {
+        monochrome(&copy,c[i%3]);
+    }
+
+    end = get_time();
+
+    printf("C monochrome:   %f s\n", end - start);
+
+    // ASM VERSION
+    memcpy(copy.data, img->data, img->row_size * img->height);
+
+    start = get_time();
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        monochrome_asm(&copy,c[i%3]);
+    }
+
+    end = get_time();
+
+    printf("ASM monochrome: %f s\n", end - start);
 
     free(copy.data);
 }
