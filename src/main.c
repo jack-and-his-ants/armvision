@@ -7,9 +7,9 @@
 
 int main(int argc , char ** argv) {
     Image * bmp = load_bmp("../images/greenland_grid_velo.bmp");
-    monochrome_asm(bmp,'b');
+    negative_neon(bmp);
     save_bmp(bmp,"test2.bmp");
-    // benchmark_negative(bmp);
+    benchmark_negative(bmp);
     // benchmark_monochrome(bmp);
     // benchmark_grayscale(bmp);
     free_bmp(bmp);

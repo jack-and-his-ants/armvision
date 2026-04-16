@@ -87,6 +87,16 @@ void benchmark_negative(Image *img) {
 
     printf("ASM negative: %f s\n", end - start);
 
+    start = get_time();
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        negative_neon(&copy);
+    }
+
+    end = get_time();
+
+    printf("ASM neon: %f s\n", end - start);
+
     free(copy.data);
 }
 
