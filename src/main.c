@@ -7,11 +7,11 @@
 
 int main(int argc , char ** argv) {
     Image * bmp = load_bmp("../images/greenland_grid_velo.bmp");
-    negative_neon(bmp);
+    grayscale_neon(bmp);
     save_bmp(bmp,"test2.bmp");
     benchmark_negative(bmp);
     // benchmark_monochrome(bmp);
-    // benchmark_grayscale(bmp);
+    benchmark_grayscale(bmp);
     free_bmp(bmp);
     return 0;
 }

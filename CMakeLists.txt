@@ -15,6 +15,8 @@ add_executable(armvision
         src/assembly/clamp.s
         src/assembly/grayscale.s
         src/assembly/monochrome_asm.s
+        src/neon/grayscale_neon.s
+        src/neon/monochrome_neon.s
         src/assembly/negative_asm.s
         src/neon/negative_neon.s
         include/utils.h

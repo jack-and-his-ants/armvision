@@ -33,8 +33,8 @@ void benchmark_grayscale(Image *img) {
     }
 
     end = get_time();
-
-    printf("C grayscale:   %f s\n", end - start);
+    float ctime = end - start;
+    printf("C grayscale:   %f s\n", ctime);
 
     // ASM VERSION
     memcpy(copy.data, img->data, img->row_size * img->height);
@@ -47,7 +47,20 @@ void benchmark_grayscale(Image *img) {
 
     end = get_time();
 
-    printf("ASM grayscale: %f s\n", end - start);
+    printf("ASM grayscale: %f s, %fx\n", end - start,ctime/(end-start));
+
+
+    memcpy(copy.data, img->data, img->row_size * img->height);
+
+    start = get_time();
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        grayscale_neon(&copy);
+    }
+
+    end = get_time();
+
+    printf("ASM NEON grayscale: %f s, %fx\n", end - start, ctime/(end-start));
 
     free(copy.data);
 }
