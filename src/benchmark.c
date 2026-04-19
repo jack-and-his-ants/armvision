@@ -133,7 +133,9 @@ void benchmark_monochrome(Image *img) {
 
     end = get_time();
 
-    printf("C monochrome:   %f s\n", end - start);
+    double ctime = end - start;
+
+    printf("C monochrome:   %f s\n", ctime);
 
     // ASM VERSION
     memcpy(copy.data, img->data, img->row_size * img->height);
@@ -146,7 +148,18 @@ void benchmark_monochrome(Image *img) {
 
     end = get_time();
 
-    printf("ASM monochrome: %f s\n", end - start);
+    printf("ASM monochrome: %f s, %fx\n", end - start,ctime/(end-start));
+
+
+    start = get_time();
+
+    for (int i = 0; i < NUM_TESTS; i++) {
+        monochrome_neon(&copy,c[i%3]);
+    }
+
+    end = get_time();
+
+    printf("ASM neon monochrome: %f s, %fx\n", end - start, ctime/(end-start));
 
     free(copy.data);
 }
